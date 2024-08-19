@@ -15,7 +15,7 @@ const RoomDisplay = () => {
         )
       try {
         setBaseURL('') //For Development
-        const response = await fetch(`http://localhost:3000/students/${admissionID}`);
+        const response = await fetch(`https://krmu-induction.vercel.app/students/${admissionID}`);
         
         if (response.ok) {
           const data = await response.json();
