@@ -13,7 +13,7 @@ const
 const router = express.Router();
 
 router.get('/:admissionID', getStudentByAdmissionID);
-router.get('/room/:roomID', getAllStudentsByRoomID);  // New route
+router.get('/room/:roomID', getAllStudentsByRoomID); 
 router.post('/', createStudent);
 router.delete('/:admissionID', deleteStudent);
 router.put('/', updateStudent);
