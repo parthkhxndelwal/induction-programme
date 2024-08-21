@@ -1,14 +1,14 @@
 const express = require('express');
-const 
-{
-    getStudentByAdmissionID,
-    createStudent,
-    deleteStudent,
-    updateStudent,
-    assignRoom,
-    getRoomByAdmissionID,
-    getAllStudentsByRoomID
-} = require('../controllers/studentController');
+const {
+  getStudentByAdmissionID,
+  createStudent,
+  deleteStudent,
+  updateStudent,
+  assignRoom,
+  getRoomByAdmissionID,
+  getAllStudentsByRoomID,
+  bulkUploadStudents,
+} = require("../controllers/studentController");
 
 const router = express.Router();
 
@@ -19,5 +19,6 @@ router.delete('/:admissionID', deleteStudent);
 router.put('/', updateStudent);
 router.post('/assignRoom', assignRoom);
 router.get('/room/:admissionID', getRoomByAdmissionID);
+router.post("/bulk-students", bulkUploadStudents);
 
 module.exports = router;

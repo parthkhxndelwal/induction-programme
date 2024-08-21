@@ -89,3 +89,27 @@ exports.getAllStudentsByRoomID = async (req, res) => {
     res.status(500).send(err.message);
   }
 };
+
+exports.bulkUploadStudents = async (req, res) => {
+  try {
+    const studentsData = req.body; // Expecting an array of { admissionID, name }
+
+    if (!Array.isArray(studentsData)) {
+      return res
+        .status(400)
+        .send("Invalid data format. Expecting an array of students.");
+    }
+
+    const students = studentsData.map((student) => ({
+      admissionID: student.admissionID,
+      name: student.name,
+      room: null, // Assign room as null by default
+    }));
+
+    const result = await Student.insertMany(students, { ordered: false });
+
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};

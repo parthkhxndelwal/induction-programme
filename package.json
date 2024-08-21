@@ -1,0 +1,14 @@
+{
+  "name": "induction-backend",
+  "version": "1.0.0",
+  "description": "This API allows administrators to manage rooms and assign students to rooms during the Induction Programme. The API is built using Express and uses JSON files for storage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

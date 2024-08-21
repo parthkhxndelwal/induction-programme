@@ -1,39 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const RoomDisplay = () => {
   const { admissionID } = useParams();
-  const [roomID, setRoomID] = useState('');
-  const [name, setName] = useState('')
-  const [error, setError] = useState('');
-  const [baseURL, setBaseURL] = useState('https://krmu-induction.vercel.app')
+  const [roomID, setRoomID] = useState("");
+  const [error, setError] = useState("");
+  const baseURL = "http://induction-backend.vercel.app";
   useEffect(() => {
-
     const fetchRoom = async () => {
-        console.log(
-            `Trying for the Admission ID : ${admissionID}`
-        )
+      console.log(`Trying for the Admission ID : ${admissionID}`);
+      console.log(`Trying to run for backend: ${baseURL}`);
       try {
-        setBaseURL('') //For Development
-        const response = await fetch(`https://krmu-induction.vercel.app/students/${admissionID}`);
-        
+        const response = await fetch(`${baseURL}/students/${admissionID}`);
+
         if (response.ok) {
           const data = await response.json();
 
           if (data.room) {
             setRoomID(data.room.roomID);
-            setName()
           } else {
-            setError('This student has not been assigned a room yet.');
+            setError("This student has not been assigned a room yet.");
           }
         } else if (response.status === 404) {
-          setError('Student not found. Please check the Admission ID.');
+          setError("Student not found. Please check the Admission ID.");
         } else {
-          setError('An error occurred while fetching the data.');
+          setError("An error occurred while fetching the data.");
         }
       } catch (err) {
-        setError('Failed to fetch room data. Please try again later.');
-        console.log(err)
+        setError("Failed to fetch room data. Please try again later.");
+        console.log(err);
       }
     };
 
@@ -41,12 +36,14 @@ const RoomDisplay = () => {
   }, [admissionID]);
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: "20px" }}>
       <h2>Room Assignment</h2>
       {error ? (
-        <p style={{ color: 'red' }}>{error}</p>
+        <p style={{ color: "red" }}>{error}</p>
       ) : (
-        <p>Your room is: <strong>{roomID}</strong></p>
+        <p>
+          Your room is: <strong>{roomID}</strong>
+        </p>
       )}
     </div>
   );
