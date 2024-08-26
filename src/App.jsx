@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
 const data = {
   "Data": [
     {
@@ -6668,12 +6669,14 @@ const data = {
       "room": "A214"
     }
   ]
-}
+};
+
 const ErrorMessage = ({ message }) => (
   <div className="text-danger m-2 w-30 text-center" role="alert">
     {message}
   </div>
 );
+
 const Loader = () => (
   <div className="d-flex justify-content-center align-items-center bg-dark text-light" style={{ height: '90vh' }}>
     <div className="spinner-grow" role="status">
@@ -6681,6 +6684,7 @@ const Loader = () => (
     </div>
   </div>
 );
+
 const RoomFinder = () => {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [showForm, setShowForm] = useState(true);
@@ -6699,56 +6703,53 @@ const RoomFinder = () => {
       const uniqueCourses = [...new Set(data.Data.map(student => student.programme))];
       setCourses(uniqueCourses);
       setLoading(false);
-    }, 2500);  // 2.5-second delay
+    }, 2500);
   }, []);
 
-  const isApplicationID = (value) => {
-    return /^KRMU\d{7}$/.test(value); // Check if the input starts with 'KRMU' followed by exactly 7 digits
-  };
-  
+  const isApplicationID = useCallback((value) => /^KRMU\d{7}$/.test(value), []);
+
+  const findStudent = useCallback(() => {
+    if (!selectedCourse || !input) {
+      setError('Please select a course and enter your name or KRMU Application ID.');
+      return [];
+    }
+
+    if (isApplicationID(input)) {
+      return data.Data.filter(
+        student => student.programme === selectedCourse && student.studentID === input
+      );
+    } else {
+      return data.Data.filter(
+        student => student.programme === selectedCourse && student.name.toLowerCase() === input.toLowerCase()
+      );
+    }
+  }, [selectedCourse, input, isApplicationID]);
 
   const handleSearch = () => {
     setError('');
     setRoom('');
     setPromptForID(false);
-
-    if (!selectedCourse || !input) {
-      setError('Please select a course and enter your name or KRMU Application ID.');
-      return;
-    }
-
-    setButtonLoading(true); // Start loading
+    setButtonLoading(true);
 
     setTimeout(() => {
-      let filteredStudents;
-
-      if (isApplicationID(input)) {
-        filteredStudents = data.Data.filter(
-          student => student.programme === selectedCourse && student.studentID === input
-        );
-      } else {
-        filteredStudents = data.Data.filter(
-          student => student.programme === selectedCourse && student.name.toLowerCase() === input.toLowerCase()
-        );
-      }
+      const filteredStudents = findStudent();
 
       if (filteredStudents.length === 0) {
         setError('No student found with the provided details.');
       } else if (filteredStudents.length === 1) {
         setRoom(filteredStudents[0].room);
-        setShowForm(false); // Hide the form when a room is found
-      } else if (filteredStudents.length > 1) {
-        setInput('');  // Clear the input field
-        setInputLabel('Enter KRMU Application ID to Continue');  // Change the label
+        setShowForm(false);
+      } else {
+        setInput('');
+        setInputLabel('Enter KRMU Application ID to Continue');
         setPromptForID(true);
         setError('Multiple students found with the same name. Please enter your KRMU Application ID.');
       }
 
-      setButtonLoading(false); // Stop loading after search completes
-    }, 1000); // Simulate 1 second delay for loading
+      setButtonLoading(false);
+    }, 1000);
   };
 
-  // Add a function to reset the form for another search
   const handleReset = () => {
     setShowForm(true);
     setSelectedCourse('');
@@ -6764,7 +6765,6 @@ const RoomFinder = () => {
 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center bg-dark text-light" style={{ height: '90vh', width: '100%' }}>
-
       <img
         style={{ width: '100px', marginBottom: '30px' }}
         src="https://upload.wikimedia.org/wikipedia/en/thumb/3/38/K.R._Mangalam_University_logo.svg/1200px-K.R._Mangalam_University_logo.svg.png"
@@ -6793,9 +6793,7 @@ const RoomFinder = () => {
 
           {!promptForID && (
             <div className="mb-3 col-10 col-md-4 col-lg-5">
-              <label htmlFor="inputField" className="form-label">
-                {inputLabel}
-              </label>
+              <label htmlFor="inputField" className="form-label">{inputLabel}</label>
               <input
                 type="text"
                 id="inputField"
@@ -6836,8 +6834,7 @@ const RoomFinder = () => {
         <div className="mt-4 col-4 text-center">
           <h3>Your Allotted Room: <strong>{room}</strong></h3>
           <p>Instructions:</p>
-          Upon arriving the College, You're requested to
-          locate <strong>{room[0]} Block</strong>.
+          Upon arriving at the College, you're requested to locate <strong>{room[0]} Block</strong>.
           Proceed to the <strong>{room[1]}{room[1] === '1' ? 'st' : room[1] === '2' ? 'nd' : room[1] === '3' ? 'rd' : 'th'} floor</strong>.
           Find <strong>Room Number {room}</strong> on that floor. <br />
           An Escort Team will be there to help you out in case you are unable to find the room. All the best!
