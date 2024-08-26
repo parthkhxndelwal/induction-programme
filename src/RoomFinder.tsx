@@ -1,57 +1,70 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { SignOutButton, UserButton } from "@clerk/clerk-react";
+
 import data from './data.json';
-import logoGroup from '/src/assets/logoGroup.webp';
+import logoGroup from '/src/assets/logo.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const ErrorMessage = ({ message }) => (
+interface Student {
+  name: string;
+  studentID: string;
+  programme: string;
+  room: string;
+}
+
+interface ErrorMessageProps {
+  message: string;
+}
+
+const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
   <div className="text-danger m-2 w-30 text-center" role="alert">
     {message}
   </div>
 );
 
-const Loader = () => (
-  <div className="d-flex justify-content-center align-items-center bg-dark text-light" style={{ height: '90vh' }}>
+const Loader: React.FC = () => (
+  <div className="d-flex justify-content-center align-items-center bg-dark text-light " style={{ height: '100vh' }}>
     <div className="spinner-grow" role="status">
       <span className="visually-hidden">Loading...</span>
     </div>
   </div>
 );
 
-const RoomFinder = () => {
-  const [buttonLoading, setButtonLoading] = useState(false);
-  const [showForm, setShowForm] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState('');
-  const [input, setInput] = useState('');
-  const [studentID, setStudentID] = useState('');
-  const [room, setRoom] = useState('');
-  const [error, setError] = useState('');
-  const [inputLabel, setInputLabel] = useState('Enter Your Name or KRMU Application ID');
-  const [promptForID, setPromptForID] = useState(false);
+const RoomFinder: React.FC = () => {
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [courses, setCourses] = useState<string[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [input, setInput] = useState<string>('');
+  const [studentID, setStudentID] = useState<string>('');
+  const [room, setRoom] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [inputLabel, setInputLabel] = useState<string>('Enter Your Name or KRMU Application ID');
+  const [promptForID, setPromptForID] = useState<boolean>(false);
 
   useEffect(() => {
     setTimeout(() => {
-      const uniqueCourses = [...new Set(data.Data.map(student => student.programme))];
+      const uniqueCourses = [...new Set((data as { Data: Student[] }).Data.map(student => student.programme))];
       setCourses(uniqueCourses);
       setLoading(false);
     }, 2500);
   }, []);
 
-  const isApplicationID = useCallback((value) => /^KRMU\d{7}$/.test(value), []);
+  const isApplicationID = useCallback((value: string): boolean => /^KRMU\d{7}$/.test(value), []);
 
-  const findStudent = useCallback(() => {
+  const findStudent = useCallback((): Student[] => {
     if (!selectedCourse || !input) {
       setError('Please select a course and enter your name or KRMU Application ID.');
       return [];
     }
 
     if (isApplicationID(input)) {
-      return data.Data.filter(
+      return (data as { Data: Student[] }).Data.filter(
         student => student.programme === selectedCourse && student.studentID === input
       );
     } else {
-      return data.Data.filter(
+      return (data as { Data: Student[] }).Data.filter(
         student => student.programme === selectedCourse && student.name.toLowerCase() === input.toLowerCase()
       );
     }
@@ -96,23 +109,31 @@ const RoomFinder = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="container d-flex flex-column align-items-center justify-content-center bg-dark text-light" style={{ height: '90vh', width: '100%' }}>
+    <>
+    <div className='col-12 d-flex flex-row justify-content-end'>
+        <UserButton/>
+        <SignOutButton>
+          <button className='btn btn-secondary m-2'>Sign Out</button>
+        </SignOutButton>
+    </div> 
+    <div className="fluid-container d-flex flex-column align-items-center justify-content-center bg-dark text-light " style={{borderRadius:'40px', padding:'6% 10%', margin: '20px'}}>
       <img
-        style={{ width: '250px', marginBottom: '20px' }}
+        style={{ width: '100px', marginBottom: '20px' }}
         src={logoGroup}
         alt=""
         className="d-block mx-auto"
       />
-      <h4 className="text-center">Find Your Allotted Room for</h4>
       <h1 className="text-center mb-4">Induction 2024 - SOET</h1>
+      <h4 className="text-center">Find Your Allocated Room</h4>
+
 
       {showForm && (
         <>
-          <div className="mb-3 col-10 col-md-4 col-lg-5">
+          <div className="mb-3 col-12 col-md-4 col-lg-5">
             <label htmlFor="courseSelect" className="form-label">Select Your Course</label>
             <select
               id="courseSelect"
-              className="form-select bg-dark text-light border-secondary"
+              className="form-select bg-dark text-light"
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
             >
@@ -124,7 +145,7 @@ const RoomFinder = () => {
           </div>
 
           {!promptForID && (
-            <div className="mb-3 col-10 col-md-4 col-lg-5">
+            <div className="mb-3 col-12 col-md-4 col-lg-5">
               <label htmlFor="inputField" className="form-label">{inputLabel}</label>
               <input
                 type="text"
@@ -137,7 +158,7 @@ const RoomFinder = () => {
           )}
 
           {promptForID && (
-            <div className="mb-4 col-10 col-md-4 col-lg-5">
+            <div className="mb-4 col-12 col-md-4 col-lg-5">
               <label htmlFor="idInput" className="form-label">Enter Your KRMU Application ID</label>
               <input
                 type="text"
@@ -161,9 +182,9 @@ const RoomFinder = () => {
       )}
 
       {error && <ErrorMessage message={error} />}
-
+      
       {room && (
-        <div className="mt-4 col-4 text-center">
+        <div className="mt-4 col-12 text-center">
           <h3>Your Allotted Room: <strong>{room}</strong></h3>
           <p>Instructions:</p>
           Upon arriving at the College, you're requested to locate <strong>{room[0]} Block</strong>.
@@ -175,6 +196,7 @@ const RoomFinder = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
