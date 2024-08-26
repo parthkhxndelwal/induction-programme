@@ -8,9 +8,7 @@ export default function App() {
     <div className="bg-dark">
       <header>
       <SignedOut>
-        <div className="d-flex align-items-center justify-content-center" style={{height:'100vh'}}>
-          <SignIn></SignIn>
-        </div>
+        <RoomFinder></RoomFinder>
       </SignedOut>
       <SignedIn>
         <RoomFinder></RoomFinder>

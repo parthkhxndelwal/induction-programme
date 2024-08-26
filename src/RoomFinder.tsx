@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SignOutButton, UserButton } from "@clerk/clerk-react";
 
 import data from './data.json';
 import logoGroup from '/src/assets/logo.png'
@@ -110,12 +109,7 @@ const RoomFinder: React.FC = () => {
 
   return (
     <>
-    <div className='col-12 d-flex flex-row justify-content-end'>
-        <UserButton/>
-        <SignOutButton>
-          <button className='btn btn-secondary m-2'>Sign Out</button>
-        </SignOutButton>
-    </div> 
+    
     <div className="fluid-container d-flex flex-column align-items-center justify-content-center bg-dark text-light " style={{borderRadius:'40px', padding:'6% 10%', margin: '20px'}}>
       <img
         style={{ width: '100px', marginBottom: '20px' }}
