@@ -1,4 +1,4 @@
-import { SignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import RoomFinder from './RoomFinder.tsx'
 
 
