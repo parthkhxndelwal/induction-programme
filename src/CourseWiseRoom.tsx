@@ -17,7 +17,7 @@ const RoomMessage: React.FC<RoomMessageProps> = ({ course }) => {
   if (courseData.room.length === 0) {
     return (
       <p>
-        You have your documentation scheduled for 27-August. Please report to Library to get your documentation completed.
+        You have your documentation scheduled for 28 August. Please report to Library to get your documentation completed.
         Upon completing the document verification you shall depart from the university. (Those who have buses shall wait for the buses till 4 pm)
       </p>
     );
@@ -29,14 +29,17 @@ const RoomMessage: React.FC<RoomMessageProps> = ({ course }) => {
     );
   } else {
     return (
-      <div>
-        <p>You are requested to report to any of the rooms below for the Induction Programme:</p>
-        <ul>
-          {courseData.room.map((room, index) => (
-            <li key={index}>{room}</li>
-          ))}
-        </ul>
+    <div>
+        <p>You are requested to report to Room <strong>{
+                courseData.room.length > 1
+                ? `${courseData.room.slice(0, -1).join(', ')} or ${courseData.room[courseData.room.length - 1]}`
+                : courseData.room[0]
+            }</strong> for the Induction Programme</p>
+        
+            
+        
       </div>
+      
     );
   }
 };
