@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
-import RoomFinder from './RoomFinder.tsx'
+// import RoomFinder from './RoomFinder.tsx'
 
 
 export default function App() {
