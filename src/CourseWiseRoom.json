@@ -1,0 +1,64 @@
+{
+    "data":[
+        {
+            "course": "BTech CSE Core",
+            "room":[]
+        },
+        {
+            "course": "BTech (Lateral) CSE Core",
+            "room":[]
+        },
+        {
+            "course": "BTech CSE AI/ML",
+            "room":["A213", "A201", "A215", "A211", "A208"]
+        },
+        {
+            "course": "BTech (Lateral) CSE AI/ML",
+            "room":[]
+        },
+        {
+            "course": "BTech CSE FSD",
+            "room":["A209"]
+        },
+        {
+            "course":"BTech (Lateral) CSE FSD",
+            "room":[]
+        },
+        {
+            "course": "BTech CSE Data Science",
+            "room":["A301"]
+        },
+        {
+            "course": "BTech (Lateral) CSE Data Science",
+            "room":[]
+        },
+        {
+            "course": "BTech CSE UX/UI",
+            "room":["A209"]
+        },
+        {
+            "course": "BTech (Lateral) CSE UX/UI",
+            "room":[]
+        },
+        {
+            "course": "BTech CSE Cyber Security",
+            "room":["A206"]
+        },
+        {
+            "course": "BTech (Lateral) CSE Cyber Security",
+            "room":[]
+        },
+        {
+            "course": "BSc",
+            "room":[]
+        },
+        {
+            "course": "BCA",
+            "room":[]
+        },
+        {
+            "course":"MCA",
+            "room":["A214", "A203"]
+        }
+    ]
+}
